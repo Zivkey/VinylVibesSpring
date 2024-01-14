@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "likes")
+@Table(name = "reviews")
 @Builder
 @Getter
 @Setter
