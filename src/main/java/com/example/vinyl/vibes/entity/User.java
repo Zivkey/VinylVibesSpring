@@ -35,6 +35,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "admin")
+    private Boolean admin;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
