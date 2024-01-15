@@ -52,7 +52,12 @@ public class UserService {
 
     public ResponseEntity<?> update(UserDTO userDTO) {
         try {
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+            Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+            if (optionalUser.isEmpty()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            User user = optionalUser.get().update(userDTO);
+            return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

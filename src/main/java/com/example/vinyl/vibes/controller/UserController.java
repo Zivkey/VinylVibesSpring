@@ -23,4 +23,8 @@ public class UserController {
         return userService.login(userDTO);
     }
 
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody UserDTO userDTO) {
+        return userService.update(userDTO);
+    }
 }

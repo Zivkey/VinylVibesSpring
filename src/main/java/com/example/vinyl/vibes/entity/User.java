@@ -55,6 +55,19 @@ public class User {
                 .build();
     }
 
+    public User update(UserDTO userDTO) {
+        if (userDTO.getFirstName() != null && !userDTO.getFirstName().equals(this.firstName)) {
+            this.firstName = userDTO.getFirstName();
+        }
+        if (userDTO.getLastName() != null && !userDTO.getLastName().equals(this.getLastName())) {
+            this.lastName = userDTO.getLastName();
+        }
+        if (userDTO.getPassword() != null && !userDTO.getPassword().equals(this.getPassword())) {
+            this.password = userDTO.getPassword();
+        }
+        return this;
+    }
+
     @PrePersist
     private void prePersist() {
         LocalDateTime date = LocalDateTime.now();
