@@ -1,5 +1,6 @@
 package com.example.vinyl.vibes.entity;
 
+import com.example.vinyl.vibes.dto.AlbumDTO;
 import com.example.vinyl.vibes.enums.Genre;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,6 +34,9 @@ public class Album {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "artist")
+    private String artist;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "genre")
     private Genre genre;
@@ -43,6 +47,17 @@ public class Album {
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+
+    public AlbumDTO toDTO() {
+        return AlbumDTO.builder()
+                .id(this.id)
+                .artist(this.artist)
+                .name(this.name)
+                .description(this.description)
+                .genre(this.genre)
+                .build();
+    }
 
     @PrePersist
     private void prePersist() {

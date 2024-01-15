@@ -18,16 +18,18 @@ public class AlbumDTO {
     private String name;
     private String image;
     private String description;
+    private String artist;
     private Genre genre;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public AlbumDTO toEntity() {
-        return AlbumDTO.builder()
+    public Album toEntity() {
+        return Album.builder()
                 .name(this.name)
                 .image(this.image)
                 .description(this.description)
                 .genre(this.genre)
+                .artist(this.artist)
                 .build();
     }
 }
