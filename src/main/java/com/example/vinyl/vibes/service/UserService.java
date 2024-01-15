@@ -30,9 +30,9 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<?> login(String email, String password) {
+    public ResponseEntity<?> login(UserDTO userDTO) {
         try {
-            Optional<User> optionalUser = userRepository.findByEmailAndPassword(email, password);
+            Optional<User> optionalUser = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword());
             if (optionalUser.isEmpty()) {
                 return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);
             }

@@ -18,9 +18,9 @@ public class UserController {
         return userService.create(userDTO);
     }
 
-    @GetMapping("login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
-        return userService.login(email, password);
+    @PostMapping("login")
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
+        return userService.login(userDTO);
     }
 
 }
