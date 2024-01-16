@@ -19,7 +19,10 @@ public class AlbumDTO {
     private String image;
     private String description;
     private String artist;
+    private Integer year;
     private Genre genre;
+    private Integer likes;
+    private Integer dislikes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -27,6 +30,7 @@ public class AlbumDTO {
         return Album.builder()
                 .name(this.name)
                 .image(this.image)
+                .year(this.year)
                 .description(this.description)
                 .genre(this.genre)
                 .artist(this.artist)

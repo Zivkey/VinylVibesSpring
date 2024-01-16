@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class LikeDTO {
     private String id;
     private UserDTO user;
-    private String userId;
+    private String userEmail;
     private AlbumDTO album;
     private String albumId;
     private Boolean value;

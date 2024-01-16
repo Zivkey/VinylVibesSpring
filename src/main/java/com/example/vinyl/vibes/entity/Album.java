@@ -37,6 +37,15 @@ public class Album {
     @Column(name = "artist")
     private String artist;
 
+    @Column(name = "year")
+    private Integer year;
+
+    @Column(name = "likes")
+    private Integer likes;
+
+    @Column(name = "dislikes")
+    private Integer dislikes;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "genre")
     private Genre genre;
@@ -54,8 +63,12 @@ public class Album {
                 .id(this.id)
                 .artist(this.artist)
                 .name(this.name)
+                .image(this.image)
+                .year(this.year)
                 .description(this.description)
                 .genre(this.genre)
+                .likes(this.likes)
+                .dislikes(this.dislikes)
                 .build();
     }
 
