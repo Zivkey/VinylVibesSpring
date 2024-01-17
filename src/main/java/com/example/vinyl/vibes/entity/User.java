@@ -62,7 +62,7 @@ public class User {
         if (userDTO.getLastName() != null && !userDTO.getLastName().equals(this.getLastName())) {
             this.lastName = userDTO.getLastName();
         }
-        if (userDTO.getPassword() != null && !userDTO.getPassword().equals(this.getPassword())) {
+        if (userDTO.getPassword() != null && !userDTO.getPassword().equals(this.getPassword()) && !userDTO.getPassword().isEmpty()) {
             this.password = userDTO.getPassword();
         }
         return this;

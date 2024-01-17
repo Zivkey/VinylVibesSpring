@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,7 +45,8 @@ public class UserService {
 
     public ResponseEntity<?> getAll() {
         try {
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+            List<User> users = userRepository.findAll();
+            return new ResponseEntity<>(users.stream().map(User::toDTO), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

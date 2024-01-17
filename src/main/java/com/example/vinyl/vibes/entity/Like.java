@@ -1,5 +1,6 @@
 package com.example.vinyl.vibes.entity;
 
+import com.example.vinyl.vibes.dto.LikeDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -38,6 +39,13 @@ public class Like {
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public LikeDTO toDTO() {
+        return LikeDTO.builder()
+                .id(this.id)
+                .value(this.value)
+                .build();
+    }
 
     @PreUpdate
     private void preUpdate() {

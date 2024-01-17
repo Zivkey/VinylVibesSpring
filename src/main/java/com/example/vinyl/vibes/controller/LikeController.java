@@ -17,9 +17,13 @@ public class LikeController {
         return likeService.create(likeDTO);
     }
 
-    @DeleteMapping()
+    @PostMapping("delete")
     public ResponseEntity<?> remove(@RequestBody LikeDTO likeDTO) {
         return likeService.remove(likeDTO);
     }
 
+    @GetMapping()
+    public ResponseEntity<?> isLiked(@RequestParam String albumId, @RequestParam String userId) {
+        return likeService.isLiked(albumId, userId);
+    }
 }
