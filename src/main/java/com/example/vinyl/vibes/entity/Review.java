@@ -1,5 +1,6 @@
 package com.example.vinyl.vibes.entity;
 
+import com.example.vinyl.vibes.dto.ReviewsDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -41,6 +42,16 @@ public class Review {
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public ReviewsDTO toDTO() {
+        return ReviewsDTO.builder()
+                .id(this.id)
+                .reviewText(this.reviewsText)
+                .title(this.title)
+                .userFirstName(this.user.getFirstName())
+                .userLastName(this.user.getLastName())
+                .build();
+    }
 
     @PreUpdate
     private void preUpdate() {
