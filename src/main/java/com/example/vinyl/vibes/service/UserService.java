@@ -25,6 +25,11 @@ public class UserService {
             if (userRepository.findByEmail(user.getEmail()).isPresent()) {
                 return new ResponseEntity<>("User with that email already exists", HttpStatus.BAD_REQUEST);
             }
+            if (!userDTO.getEmail().isEmpty()) {
+                if (!userDTO.getEmail().contains("@gmail.com")) {
+                    return new ResponseEntity<>("Your email needs to have @gmail.com", HttpStatus.BAD_REQUEST);
+                }
+            }
             return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
