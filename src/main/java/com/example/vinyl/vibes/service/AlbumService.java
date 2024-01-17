@@ -22,6 +22,8 @@ public class AlbumService {
     public ResponseEntity<?> create(AlbumDTO albumDTO) {
         try {
             Album album = albumDTO.toEntity();
+            album.setLikes(0);
+            album.setDislikes(0);
             return new ResponseEntity<>(albumRepository.save(album), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
