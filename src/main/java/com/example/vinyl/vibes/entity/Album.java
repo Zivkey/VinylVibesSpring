@@ -31,7 +31,7 @@ public class Album {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 3000)
     private String description;
 
     @Column(name = "artist")
