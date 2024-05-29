@@ -34,8 +34,9 @@ public class Album {
     @Column(name = "description", length = 3000)
     private String description;
 
-    @Column(name = "artist")
-    private String artist;
+    @ManyToOne
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
 
     @Column(name = "year")
     private Integer year;
@@ -61,7 +62,7 @@ public class Album {
     public AlbumDTO toDTO() {
         return AlbumDTO.builder()
                 .id(this.id)
-                .artist(this.artist)
+                .artist(this.artist == null ? "" : this.artist.getName())
                 .name(this.name)
                 .image(this.image)
                 .year(this.year)
