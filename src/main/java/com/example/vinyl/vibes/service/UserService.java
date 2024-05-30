@@ -3,6 +3,7 @@ package com.example.vinyl.vibes.service;
 import com.example.vinyl.vibes.dto.UserDTO;
 import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.UserRepository;
+import com.example.vinyl.vibes.tools.JwtTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,8 +43,11 @@ public class UserService {
             if (optionalUser.isEmpty()) {
                 return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);
             }
+            String token = JwtTool.generateToken(optionalUser.get().getId(), 1000);
+            log.info(token);
             return new ResponseEntity<>(optionalUser.get().toDTO(), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

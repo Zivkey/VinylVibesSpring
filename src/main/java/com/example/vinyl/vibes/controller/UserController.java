@@ -13,7 +13,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("register")
+    @PostMapping("public/register")
     public ResponseEntity<?> create(@RequestBody UserDTO userDTO) {
         return userService.create(userDTO);
     }
