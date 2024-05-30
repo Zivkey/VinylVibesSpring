@@ -4,8 +4,10 @@ import com.example.vinyl.vibes.dto.AlbumDTO;
 import com.example.vinyl.vibes.entity.Album;
 import com.example.vinyl.vibes.entity.Artist;
 import com.example.vinyl.vibes.entity.Like;
+import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.AlbumRepository;
 import com.example.vinyl.vibes.repository.ArtistRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,15 @@ public class AlbumService {
     private final ArtistRepository artistRepository;
 
     private final AlbumRepository albumRepository;
+    private final HttpServletRequest request;
 
     public ResponseEntity<?> create(AlbumDTO albumDTO) {
         try {
             Album album = albumDTO.toEntity();
-
+            User user = (User) request.getAttribute("USER");
+            if (!user.getAdmin()) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
             Optional<Artist> optionalArtist = artistRepository.findByName(albumDTO.getArtist());
             if (optionalArtist.isPresent()) {
                 album.setArtist(optionalArtist.get());

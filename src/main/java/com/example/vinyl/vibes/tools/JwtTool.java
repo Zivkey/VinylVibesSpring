@@ -5,27 +5,25 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import java.util.Arrays;
 import java.util.Date;
 
 public class JwtTool {
+    private static final String SECRET_KEY = "eW91c2VjcmV0a2V5aXNoZXJlbXVoYWhhaGFoYWhhaGhh";
+    private static final long EXPIRATION_TIME = 86400000;
 
-    public static String generateToken(String userId, long expirationTime) {
+    private static Key getKey() {
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    }
+
+    public static String generateToken(String subject) {
         return Jwts.builder()
-                .setSubject(userId)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .setSubject(subject)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-
-    private static Key getSignInKey() {
-        String secretKey = "a3VyY2luYWt1cmNpbmFrdXJjaW5ha3VyY2luYWt1cmNpbmFrdXJjaW5ha3VyY2luYWt1cmNpbmFrdXJjaW5ha3VyY2luYWt1cmNpbmE=";
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        System.out.println(Arrays.toString(Decoders.BASE64.decode(secretKey)));
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
 
 }

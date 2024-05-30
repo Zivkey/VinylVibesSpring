@@ -22,6 +22,8 @@ public class UserDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    private String jwt;
+
     public User toEntity() {
         return User.builder()
                 .firstName(this.firstName)

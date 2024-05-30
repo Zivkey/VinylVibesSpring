@@ -4,6 +4,7 @@ import com.example.vinyl.vibes.dto.UserDTO;
 import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.UserRepository;
 import com.example.vinyl.vibes.tools.JwtTool;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final HttpServletRequest request;
 
     public ResponseEntity<?> create(UserDTO userDTO) {
         try {
@@ -37,15 +39,16 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<?> login(UserDTO userDTO) {
+    public ResponseEntity<?> login(UserDTO dto) {
         try {
-            Optional<User> optionalUser = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword());
+            Optional<User> optionalUser = userRepository.findByEmailAndPassword(dto.getEmail(), dto.getPassword());
             if (optionalUser.isEmpty()) {
                 return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);
             }
-            String token = JwtTool.generateToken(optionalUser.get().getId(), 1000);
-            log.info(token);
-            return new ResponseEntity<>(optionalUser.get().toDTO(), HttpStatus.OK);
+            UserDTO userDTO = optionalUser.get().toDTO();
+            log.info(JwtTool.generateToken(optionalUser.get().getEmail()));
+            userDTO.setJwt(JwtTool.generateToken(optionalUser.get().getEmail()));
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -63,11 +66,15 @@ public class UserService {
 
     public ResponseEntity<?> update(UserDTO userDTO) {
         try {
-            Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-            if (optionalUser.isEmpty()) {
-                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            User user = (User) request.getAttribute("USER");
+            if (user.getAdmin().equals(true) && userDTO.getId() != null) {
+                Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+                if (optionalUser.isEmpty()) {
+                    return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+                }
+                user = optionalUser.get();
             }
-            User user = optionalUser.get().update(userDTO);
+            user = user.update(userDTO);
             return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

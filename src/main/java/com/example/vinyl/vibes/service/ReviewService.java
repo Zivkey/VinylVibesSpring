@@ -7,6 +7,7 @@ import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.AlbumRepository;
 import com.example.vinyl.vibes.repository.ReviewRepository;
 import com.example.vinyl.vibes.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
     private final AlbumRepository albumRepository;
+    private final HttpServletRequest request;
 
     public ResponseEntity<?> createReview(ReviewsDTO reviewsDTO) {
         try {
@@ -31,12 +33,9 @@ public class ReviewService {
             if (optionalAlbum.isEmpty()) {
                 return new ResponseEntity<>("Album not found", HttpStatus.BAD_REQUEST);
             }
-            Optional<User> optionalUser = userRepository.findById(reviewsDTO.getUserId());
-            if (optionalUser.isEmpty()) {
-                return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
-            }
+            User user = (User) request.getAttribute("USER");
             Review review = reviewsDTO.toEntity();
-            review.setUser(optionalUser.get());
+            review.setUser(user);
             review.setAlbum(optionalAlbum.get());
             return new ResponseEntity<>(reviewRepository.save(review).toDTO(), HttpStatus.OK);
         } catch (Exception e) {

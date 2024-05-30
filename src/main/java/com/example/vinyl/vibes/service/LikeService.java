@@ -7,6 +7,7 @@ import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.AlbumRepository;
 import com.example.vinyl.vibes.repository.LikeRepository;
 import com.example.vinyl.vibes.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,19 +24,17 @@ public class LikeService {
     private final AlbumRepository albumRepository;
 
     private final UserRepository userRepository;
+    private final HttpServletRequest request;
 
 
     public ResponseEntity<?> create(LikeDTO likeDTO) {
         try {
-            Optional<User> optionalUser = userRepository.findByEmail(likeDTO.getUserEmail());
-            if (optionalUser.isEmpty()) {
-                return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
-            }
+            User user = (User) request.getAttribute("USER");
             Optional<Album> optionalAlbum = albumRepository.findById(likeDTO.getAlbumId());
             if (optionalAlbum.isEmpty()) {
                 return new ResponseEntity<>("Album not found", HttpStatus.BAD_REQUEST);
             }
-            Optional<Like> optionalLike = likeRepository.findByAlbumIdAndUserId(optionalAlbum.get().getId(), optionalUser.get().getId());
+            Optional<Like> optionalLike = likeRepository.findByAlbumIdAndUserId(optionalAlbum.get().getId(), user.getId());
             if (optionalLike.isPresent()) {
                 if (!optionalLike.get().getValue().equals(likeDTO.getValue())) {
                     optionalLike.get().setUser(null);
@@ -63,7 +62,7 @@ public class LikeService {
             }
             Like like = Like.builder()
                     .album(optionalAlbum.get())
-                    .user(optionalUser.get())
+                    .user(user)
                     .value(likeDTO.getValue())
                     .build();
             likeRepository.save(like);
@@ -81,15 +80,12 @@ public class LikeService {
 
     public ResponseEntity<?> remove(LikeDTO likeDTO) {
         try {
-            Optional<User> optionalUser = userRepository.findByEmail(likeDTO.getUserEmail());
-            if (optionalUser.isEmpty()) {
-                return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
-            }
+            User user = (User) request.getAttribute("USER");
             Optional<Album> optionalAlbum = albumRepository.findById(likeDTO.getAlbumId());
             if (optionalAlbum.isEmpty()) {
                 return new ResponseEntity<>("Album not found", HttpStatus.BAD_REQUEST);
             }
-            Optional<Like> optionalLike = likeRepository.findByAlbumIdAndUserId(optionalAlbum.get().getId(), optionalUser.get().getId());
+            Optional<Like> optionalLike = likeRepository.findByAlbumIdAndUserId(optionalAlbum.get().getId(), user.getId());
             if (optionalLike.isPresent()) {
                 optionalLike.get().setAlbum(null);
                 optionalLike.get().setUser(null);
@@ -103,15 +99,12 @@ public class LikeService {
 
     public ResponseEntity<?> isLiked(String albumId, String userId) {
         try {
-            Optional<User> optionalUser = userRepository.findById(userId);
-            if (optionalUser.isEmpty()) {
-                return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
-            }
+            User user = (User) request.getAttribute("USER");
             Optional<Album> optionalAlbum = albumRepository.findById(albumId);
             if (optionalAlbum.isEmpty()) {
                 return new ResponseEntity<>("Album not found", HttpStatus.BAD_REQUEST);
             }
-            Optional<Like> optionalLike = likeRepository.findByAlbumIdAndUserId(albumId, userId);
+            Optional<Like> optionalLike = likeRepository.findByAlbumIdAndUserId(albumId, user.getId());
             if (optionalLike.isPresent()) {
                 return new ResponseEntity<>(optionalLike.get().toDTO(), HttpStatus.OK);
             } else {

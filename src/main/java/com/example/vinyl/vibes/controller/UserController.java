@@ -18,7 +18,7 @@ public class UserController {
         return userService.create(userDTO);
     }
 
-    @PostMapping("login")
+    @PostMapping("login/public")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         return userService.login(userDTO);
     }
@@ -27,4 +27,5 @@ public class UserController {
     public ResponseEntity<?> update(@RequestBody UserDTO userDTO) {
         return userService.update(userDTO);
     }
+
 }
