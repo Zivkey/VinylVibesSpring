@@ -18,7 +18,7 @@ public class UserController {
         return userService.create(userDTO);
     }
 
-    @PostMapping("login/public")
+    @PostMapping("public/login")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         return userService.login(userDTO);
     }

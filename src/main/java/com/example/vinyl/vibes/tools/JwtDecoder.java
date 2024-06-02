@@ -8,7 +8,7 @@ import java.security.Key;
 
 public class JwtDecoder {
 
-    private static final String SECRET_KEY = "eW91c2VjcmV0a2V5aXNoZXJlbXVoYWhhaGFoYWhhaGhh"; // Replace with your actual secret key
+    private static final String SECRET_KEY = "eW91c2VjcmV0a2V5aXNoZXJlbXVoYWhhaGFoYWhhaGhh";
 
     private static Key getKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());

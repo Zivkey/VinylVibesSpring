@@ -52,7 +52,7 @@ public class V1__init__data {
 
         if (albumRepository.findAll().isEmpty()) {
             albumRepository.save(Album.builder().name("2014 Forrest Hills Drive").
-                    image("https://thehiphoprealm.com/cdn/shop/files/37d655b8-95dd-4a7d-ac0f-f0d177426115_1024x1024.jpg?v=1686051078")
+                    image("https://m.media-amazon.com/images/I/71v0b7YG+zL._UF1000,1000_QL80_.jpg")
                     .year(2014).artist(artist1.get()).genre(Genre.HIP_HOP).
                     description("In 2014, Cole bought the house, and was the first home he had purchased. The album's title is used to recount " +
                             "Cole's upbringing, leaving North Carolina to New York;").dislikes(14).likes(102).build());
