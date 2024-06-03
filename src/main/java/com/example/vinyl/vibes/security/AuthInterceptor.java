@@ -30,7 +30,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            Optional<User> optionalUser = userRepository.findByEmail(getSubject(token));
+            Optional<User> optionalUser = userRepository.findByEmail(JwtDecoder.getSubject(token));
             if (optionalUser.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return false;
