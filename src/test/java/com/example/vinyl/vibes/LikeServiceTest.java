@@ -6,7 +6,7 @@ import com.example.vinyl.vibes.entity.Like;
 import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.AlbumRepository;
 import com.example.vinyl.vibes.repository.LikeRepository;
-import com.example.vinyl.vibes.service.LikeService;
+import com.example.vinyl.vibes.service.impl.LikeServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ public class LikeServiceTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private LikeService likeService;
+    private LikeServiceImpl likeServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -63,7 +63,7 @@ public class LikeServiceTest {
         when(likeRepository.save(any(Like.class))).thenReturn(new Like());
         when(albumRepository.save(any(Album.class))).thenReturn(album);
 
-        ResponseEntity<?> response = likeService.create(likeDTO);
+        ResponseEntity<?> response = likeServiceImpl.create(likeDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(albumRepository, times(1)).findById(anyString());
@@ -83,7 +83,7 @@ public class LikeServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(albumRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = likeService.create(likeDTO);
+        ResponseEntity<?> response = likeServiceImpl.create(likeDTO);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Album not found", response.getBody());
@@ -112,7 +112,7 @@ public class LikeServiceTest {
         when(albumRepository.findById(anyString())).thenReturn(Optional.of(album));
         when(likeRepository.findByAlbumIdAndUserId(anyString(), anyString())).thenReturn(Optional.of(like));
 
-        ResponseEntity<?> response = likeService.remove(likeDTO);
+        ResponseEntity<?> response = likeServiceImpl.remove(likeDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(albumRepository, times(1)).findById(anyString());
@@ -131,7 +131,7 @@ public class LikeServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(albumRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = likeService.remove(likeDTO);
+        ResponseEntity<?> response = likeServiceImpl.remove(likeDTO);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Album not found", response.getBody());
@@ -156,7 +156,7 @@ public class LikeServiceTest {
         when(albumRepository.findById(anyString())).thenReturn(Optional.of(album));
         when(likeRepository.findByAlbumIdAndUserId(anyString(), anyString())).thenReturn(Optional.of(like));
 
-        ResponseEntity<?> response = likeService.isLiked("1", "1");
+        ResponseEntity<?> response = likeServiceImpl.isLiked("1", "1");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(albumRepository, times(1)).findById(anyString());
@@ -171,7 +171,7 @@ public class LikeServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(albumRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = likeService.isLiked("1", "1");
+        ResponseEntity<?> response = likeServiceImpl.isLiked("1", "1");
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Album not found", response.getBody());

@@ -1,7 +1,7 @@
 package com.example.vinyl.vibes.controller;
 
 import com.example.vinyl.vibes.dto.ReviewsDTO;
-import com.example.vinyl.vibes.service.ReviewService;
+import com.example.vinyl.vibes.service.impl.ReviewServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReviewController {
 
-    private final ReviewService reviewService;
+    private final ReviewServiceImpl reviewServiceImpl;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ReviewsDTO reviewsDTO) {
-        return reviewService.createReview(reviewsDTO);
+        return reviewServiceImpl.createReview(reviewsDTO);
     }
 
     @GetMapping("{albumId}")
     public ResponseEntity<?> getForAlbum(@PathVariable String albumId) {
-        return reviewService.getAllReviews(albumId);
+        return reviewServiceImpl.getAllReviews(albumId);
     }
 
 }

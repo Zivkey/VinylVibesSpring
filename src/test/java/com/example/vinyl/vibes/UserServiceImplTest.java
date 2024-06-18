@@ -3,7 +3,7 @@ package com.example.vinyl.vibes;
 import com.example.vinyl.vibes.dto.UserDTO;
 import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.UserRepository;
-import com.example.vinyl.vibes.service.UserService;
+import com.example.vinyl.vibes.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -30,7 +30,7 @@ public class UserServiceTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -48,7 +48,7 @@ public class UserServiceTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        ResponseEntity<?> response = userService.create(userDTO);
+        ResponseEntity<?> response = userServiceImpl.create(userDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(userRepository, times(1)).findByEmail(anyString());
@@ -65,7 +65,7 @@ public class UserServiceTest {
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        ResponseEntity<?> response = userService.create(userDTO);
+        ResponseEntity<?> response = userServiceImpl.create(userDTO);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("User with that email already exists", response.getBody());
@@ -85,7 +85,7 @@ public class UserServiceTest {
 
         when(userRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Optional.of(user));
 
-        ResponseEntity<?> response = userService.login(userDTO);
+        ResponseEntity<?> response = userServiceImpl.login(userDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(userRepository, times(1)).findByEmailAndPassword(anyString(), anyString());
@@ -99,7 +99,7 @@ public class UserServiceTest {
 
         when(userRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = userService.login(userDTO);
+        ResponseEntity<?> response = userServiceImpl.login(userDTO);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Login failed", response.getBody());
@@ -114,7 +114,7 @@ public class UserServiceTest {
 
         when(userRepository.findAll()).thenReturn(users);
 
-        ResponseEntity<?> response = userService.getAll();
+        ResponseEntity<?> response = userServiceImpl.getAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(userRepository, times(1)).findAll();
@@ -124,7 +124,7 @@ public class UserServiceTest {
     void testGetAllUsers_Exception() {
         when(userRepository.findAll()).thenThrow(new RuntimeException("Database Error"));
 
-        ResponseEntity<?> response = userService.getAll();
+        ResponseEntity<?> response = userServiceImpl.getAll();
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         verify(userRepository, times(1)).findAll();
@@ -143,7 +143,7 @@ public class UserServiceTest {
         when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        ResponseEntity<?> response = userService.update(userDTO);
+        ResponseEntity<?> response = userServiceImpl.update(userDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(userRepository, times(1)).findById(anyString());
@@ -162,7 +162,7 @@ public class UserServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(userRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = userService.update(userDTO);
+        ResponseEntity<?> response = userServiceImpl.update(userDTO);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("User not found", response.getBody());
@@ -182,7 +182,7 @@ public class UserServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(userRepository.findById(anyString())).thenThrow(new RuntimeException("Database Error"));
 
-        ResponseEntity<?> response = userService.update(userDTO);
+        ResponseEntity<?> response = userServiceImpl.update(userDTO);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         verify(userRepository, times(1)).findById(anyString());

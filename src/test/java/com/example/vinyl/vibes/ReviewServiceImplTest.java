@@ -6,8 +6,7 @@ import com.example.vinyl.vibes.entity.Review;
 import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.AlbumRepository;
 import com.example.vinyl.vibes.repository.ReviewRepository;
-import com.example.vinyl.vibes.repository.UserRepository;
-import com.example.vinyl.vibes.service.ReviewService;
+import com.example.vinyl.vibes.service.impl.ReviewServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class ReviewServiceTest {
+public class ReviewServiceImplTest {
 
     @Mock
     private ReviewRepository reviewRepository;
@@ -38,7 +37,7 @@ public class ReviewServiceTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private ReviewService reviewService;
+    private ReviewServiceImpl reviewServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -64,7 +63,7 @@ public class ReviewServiceTest {
         when(albumRepository.findById(anyString())).thenReturn(Optional.of(album));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        ResponseEntity<?> response = reviewService.createReview(reviewsDTO);
+        ResponseEntity<?> response = reviewServiceImpl.createReview(reviewsDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(albumRepository, times(1)).findById(anyString());
@@ -82,7 +81,7 @@ public class ReviewServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(albumRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = reviewService.createReview(reviewsDTO);
+        ResponseEntity<?> response = reviewServiceImpl.createReview(reviewsDTO);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Album not found", response.getBody());
@@ -101,7 +100,7 @@ public class ReviewServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(albumRepository.findById(anyString())).thenThrow(new RuntimeException("Database Error"));
 
-        ResponseEntity<?> response = reviewService.createReview(reviewsDTO);
+        ResponseEntity<?> response = reviewServiceImpl.createReview(reviewsDTO);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         verify(albumRepository, times(1)).findById(anyString());
@@ -120,7 +119,7 @@ public class ReviewServiceTest {
         when(albumRepository.findById(anyString())).thenReturn(Optional.of(album));
         when(reviewRepository.findAllByAlbumId(anyString())).thenReturn(reviews);
 
-        ResponseEntity<?> response = reviewService.getAllReviews("1");
+        ResponseEntity<?> response = reviewServiceImpl.getAllReviews("1");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(albumRepository, times(1)).findById(anyString());
@@ -131,7 +130,7 @@ public class ReviewServiceTest {
     void testGetAllReviews_AlbumNotFound() {
         when(albumRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = reviewService.getAllReviews("1");
+        ResponseEntity<?> response = reviewServiceImpl.getAllReviews("1");
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Album not found", response.getBody());
@@ -147,7 +146,7 @@ public class ReviewServiceTest {
         when(albumRepository.findById(anyString())).thenReturn(Optional.of(album));
         when(reviewRepository.findAllByAlbumId(anyString())).thenReturn(new ArrayList<>());
 
-        ResponseEntity<?> response = reviewService.getAllReviews("1");
+        ResponseEntity<?> response = reviewServiceImpl.getAllReviews("1");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(new ArrayList<>(), response.getBody());
@@ -159,7 +158,7 @@ public class ReviewServiceTest {
     void testGetAllReviews_Exception() {
         when(albumRepository.findById(anyString())).thenThrow(new RuntimeException("Database Error"));
 
-        ResponseEntity<?> response = reviewService.getAllReviews("1");
+        ResponseEntity<?> response = reviewServiceImpl.getAllReviews("1");
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         verify(albumRepository, times(1)).findById(anyString());
