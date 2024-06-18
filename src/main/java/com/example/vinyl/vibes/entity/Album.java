@@ -51,7 +51,8 @@ public class Album {
     @Column(name = "genre")
     private Genre genre;
 
-
+    @Column(name = "deleted")
+    private Boolean deleted;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

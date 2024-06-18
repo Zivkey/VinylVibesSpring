@@ -6,7 +6,7 @@ import com.example.vinyl.vibes.entity.Artist;
 import com.example.vinyl.vibes.entity.User;
 import com.example.vinyl.vibes.repository.AlbumRepository;
 import com.example.vinyl.vibes.repository.ArtistRepository;
-import com.example.vinyl.vibes.service.AlbumService;
+import com.example.vinyl.vibes.service.impl.AlbumServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class AlbumServiceTest {
+public class AlbumServiceImplTest {
 
     @Mock
     private ArtistRepository artistRepository;
@@ -37,7 +37,7 @@ public class AlbumServiceTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private AlbumService albumService;
+    private AlbumServiceImpl albumServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -57,7 +57,7 @@ public class AlbumServiceTest {
         when(artistRepository.save(any(Artist.class))).thenReturn(new Artist());
         when(albumRepository.save(any(Album.class))).thenReturn(new Album());
 
-        ResponseEntity<?> response = albumService.create(albumDTO);
+        ResponseEntity<?> response = albumServiceImpl.create(albumDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(artistRepository, times(1)).findByName(anyString());
@@ -75,7 +75,7 @@ public class AlbumServiceTest {
 
         when(request.getAttribute("USER")).thenReturn(user);
 
-        ResponseEntity<?> response = albumService.create(albumDTO);
+        ResponseEntity<?> response = albumServiceImpl.create(albumDTO);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         verify(artistRepository, times(0)).findByName(anyString());
@@ -94,7 +94,7 @@ public class AlbumServiceTest {
         when(request.getAttribute("USER")).thenReturn(user);
         when(artistRepository.findByName(anyString())).thenThrow(new RuntimeException("Database Error"));
 
-        ResponseEntity<?> response = albumService.create(albumDTO);
+        ResponseEntity<?> response = albumServiceImpl.create(albumDTO);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         verify(artistRepository, times(1)).findByName(anyString());
@@ -112,7 +112,7 @@ public class AlbumServiceTest {
 
         when(albumRepository.findAll()).thenReturn(albums);
 
-        ResponseEntity<?> response = albumService.getAll();
+        ResponseEntity<?> response = albumServiceImpl.getAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(albumRepository, times(1)).findAll();
@@ -122,7 +122,7 @@ public class AlbumServiceTest {
     void testGetAllAlbums_Exception() {
         when(albumRepository.findAll()).thenThrow(new RuntimeException("Database Error"));
 
-        ResponseEntity<?> response = albumService.getAll();
+        ResponseEntity<?> response = albumServiceImpl.getAll();
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         verify(albumRepository, times(1)).findAll();

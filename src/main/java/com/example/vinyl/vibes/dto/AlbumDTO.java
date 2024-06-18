@@ -33,6 +33,7 @@ public class AlbumDTO {
                 .year(this.year)
                 .description(this.description)
                 .genre(this.genre)
+                .deleted(false)
                 .build();
     }
 }

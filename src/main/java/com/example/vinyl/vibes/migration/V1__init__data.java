@@ -53,17 +53,17 @@ public class V1__init__data {
         if (albumRepository.findAll().isEmpty()) {
             albumRepository.save(Album.builder().name("2014 Forrest Hills Drive").
                     image("https://m.media-amazon.com/images/I/71v0b7YG+zL._UF1000,1000_QL80_.jpg")
-                    .year(2014).artist(artist1.get()).genre(Genre.HIP_HOP).
+                    .year(2014).artist(artist1.get()).genre(Genre.HIP_HOP).deleted(false).
                     description("In 2014, Cole bought the house, and was the first home he had purchased. The album's title is used to recount " +
                             "Cole's upbringing, leaving North Carolina to New York;").dislikes(14).likes(102).build());
             albumRepository.save(Album.builder().name("Nevermind").
                     image("https://images.prismic.io/milanote/df7eeb83a07162b45ac2e882cac055de9411054a_cover.jpg?auto=compress,format")
-                    .year(1991).artist(artist2.get()).genre(Genre.ROCK).
+                    .year(1991).artist(artist2.get()).genre(Genre.ROCK).deleted(false).
                     description("It includes anti-establishment views, anti-sexism, frustration, alienation, and troubled love inspired by Cobain's " +
                             "broken relationship with Bikini Kill's Tobi Vail.").dislikes(55).likes(221).build());
             albumRepository.save(Album.builder().name("Graduation").
                     image("https://m.media-amazon.com/images/I/71T4fEX7jaL._AC_UF1000,1000_QL80_.jpg")
-                    .year(2007).artist(artist3.get()).genre(Genre.HIP_HOP).
+                    .year(2007).artist(artist3.get()).genre(Genre.HIP_HOP).deleted(false).
                     description("GRADUATION is the 3rd installment in the Kanye West series of ground breaking albums, targeting every school kid," +
                             " from those that have dropped out of collage.").dislikes(21).likes(341).build());
         }
