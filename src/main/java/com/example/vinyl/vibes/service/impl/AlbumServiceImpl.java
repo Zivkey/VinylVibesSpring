@@ -55,7 +55,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public ResponseEntity<?> getAll() {
         try {
-            List<Album> albums = albumRepository.findAll();
+            List<Album> albums = albumRepository.findAllByDeletedFalse();
             return new ResponseEntity<>(albums.stream().map(Album::toDTO), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -66,7 +66,10 @@ public class AlbumServiceImpl implements AlbumService {
     public ResponseEntity<?> delete(String id) {
         try {
             Optional<Album> optionalAlbum = albumRepository.findById(id);
-            optionalAlbum.ifPresent(album -> album.setDeleted(true));
+            if (optionalAlbum.isPresent()) {
+                optionalAlbum.get().setDeleted(true);
+                albumRepository.save(optionalAlbum.get());
+            }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
